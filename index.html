@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gim Edukasi ULP — Prosedur Kesehatan, Keselamatan &amp; Keamanan dalam Bekerja</title>
+  <style>
+    /* =========================================================
+   GIM EDUKASI ULP (P_ULP_4)
+   Tampilan memakai gambar rancangan asli dari storyboard PDF;
+   tombol & panel interaktif diletakkan tepat di atas gambar.
+   ========================================================= */
+    :root {
+      --u: 13px;
+      --navy: #0d2b4a;
+      --biru: #1c7ed6;
+      --sian: #3ad7ff;
+      --hijau: #2ecc71;
+      --kuning: #ffd23c;
+      --merah: #d5342f;
+      --oranye: #f0a04a;
+      --ungu: #7d5bd6;
+      --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      background: #03101d;
+      font-family: var(--font);
+      overflow: hidden;
+      color: #fff
+    }
+
+    #panggung {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(100vw, 177.78vh);
+      height: min(56.25vw, 100vh);
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 0 60px rgba(0, 0, 0, .85)
+    }
+
+    .adegan {
+      position: absolute;
+      inset: 0;
+      display: none;
+      background-size: 100% 100%;
+      background-position: center
+    }
+
+    .adegan.aktif {
+      display: block;
+      animation: masuk .45s ease
+    }
+
+    .adegan.geser.aktif {
+      animation: geser .45s cubic-bezier(.22, .9, .3, 1)
+    }
+
+    @keyframes masuk {
+      from {
+        opacity: 0
+      }
+
+      to {
+        opacity: 1
+      }
+    }
+
+    @keyframes geser {
+      from {
+        opacity: 0;
+        transform: translateX(6%)
+      }
+
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    .hot {
+      position: absolute;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 0;
+      border-radius: calc(var(--u)*.9);
+      transition: transform .16s, box-shadow .16s, background .16s
+    }
+
+    .hot:hover {
+      transform: scale(1.03);
+      background: rgba(58, 215, 255, .16);
+      box-shadow: 0 0 0 calc(var(--u)*.15) rgba(58, 215, 255, .9), 0 0 calc(var(--u)*1.8) rgba(58, 215, 255, .7)
+    }
+
+    .hot:active {
+      transform: scale(.98)
+    }
+
+    .hot.bulat {
+      border-radius: 50%
+    }
+
+    .hot.denyut {
+      animation: denyut 2.5s ease-in-out infinite
+    }
+
+    @keyframes denyut {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(58, 215, 255, 0)
+      }
+
+      50% {
+        box-shadow: 0 0 0 calc(var(--u)*.18) rgba(58, 215, 255, .5)
+      }
+    }
+
+    .hot:hover.denyut {
+      animation: none
+    }
+
+    .hot.kunci {
+      cursor: not-allowed
+    }
+
+    .hot.kunci:hover {
+      transform: none;
+      background: rgba(255, 60, 60, .16);
+      box-shadow: 0 0 0 calc(var(--u)*.15) rgba(255, 90, 90, .85)
+    }
+
+    .hot.pilih-benar {
+      background: rgba(46, 204, 113, .28);
+      box-shadow: 0 0 0 calc(var(--u)*.18) #2ecc71, 0 0 calc(var(--u)*1.8) rgba(46, 204, 113, .9);
+      animation: none
+    }
+
+    .hot.pilih-salah {
+      background: rgba(213, 52, 47, .28);
+      box-shadow: 0 0 0 calc(var(--u)*.18) #d5342f, 0 0 calc(var(--u)*1.8) rgba(213, 52, 47, .9);
+      animation: none
+    }
+
+    .hot.terpakai {
+      opacity: 0;
+      pointer-events: none
+    }
+
+    .tip {
+      position: absolute;
+      left: 50%;
+      bottom: 104%;
+      transform: translateX(-50%) translateY(.4em);
+      background: #062038;
+      color: #eaf6ff;
+      border: 1px solid var(--sian);
+      border-radius: .5em;
+      padding: .35em .7em;
+      font-size: calc(var(--u)*1);
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: .18s;
+      z-index: 9
+    }
+
+    .hot:hover .tip {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0)
+    }
+
+    .gearbtn {
+      position: absolute;
+      right: 1.5%;
+      top: 1.5%;
+      width: 6.5%;
+      height: 8%;
+      border-radius: 50%;
+      background: rgba(9, 30, 52, .72);
+      border: 2px solid rgba(255, 255, 255, .5);
+      color: #fff;
+      font-size: calc(var(--u)*1.6);
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      z-index: 5
+    }
+
+    .gearbtn:hover {
+      background: rgba(28, 126, 214, .8)
+    }
+
+    .backbtn {
+      position: absolute;
+      left: 1%;
+      top: 91%;
+      width: 16%;
+      height: 8%;
+      border-radius: calc(var(--u)*.8);
+      background: rgba(9, 30, 52, .72);
+      border: 2px solid rgba(255, 255, 255, .5);
+      color: #fff;
+      font-size: calc(var(--u)*1.1);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .3em;
+      cursor: pointer;
+      z-index: 5
+    }
+
+    .backbtn:hover {
+      background: rgba(28, 126, 214, .8)
+    }
+
+    .ov {
+      position: absolute;
+      border-radius: calc(var(--u)*.7);
+      font-size: calc(var(--u)*1.1);
+      line-height: 1.3;
+      background: linear-gradient(180deg, rgba(8, 32, 60, .94), rgba(4, 18, 34, .94));
+      border: calc(var(--u)*.1) solid var(--sian);
+      color: #eaf6ff;
+      padding: calc(var(--u)*.4) calc(var(--u)*.6);
+      box-shadow: 0 0 calc(var(--u)*1.2) rgba(58, 215, 255, .4);
+      display: flex;
+      flex-direction: column;
+      justify-content: center
+    }
+
+    .ov .judul {
+      color: var(--sian);
+      font-weight: 700;
+      letter-spacing: .05em;
+      font-size: calc(var(--u)*.95);
+      text-align: center
+    }
+
+    .ov .nilai {
+      font-size: calc(var(--u)*1.9);
+      font-weight: 800;
+      text-align: center;
+      line-height: 1;
+      color: var(--kuning)
+    }
+
+    .ov.solid {
+      background: #0b2b4d;
+      border-color: #1a4a7a
+    }
+
+    .hijau {
+      color: #5ef08f
+    }
+
+    .kuningx {
+      color: var(--kuning)
+    }
+
+    .merahx {
+      color: #ff7b76
+    }
+
+    /* deskripsi item p3k */
+    .deskripsi-p3k {
+      position: absolute;
+      left: 27.5%;
+      top: 59%;
+      width: 48%;
+      height: 31%;
+      background: rgba(9, 25, 42, .97);
+      border: calc(var(--u)*.1) solid #2a4a6b;
+      border-radius: calc(var(--u)*.6);
+      padding: calc(var(--u)*.6) calc(var(--u)*.8);
+      display: flex;
+      gap: calc(var(--u)*.8);
+      align-items: flex-start;
+      color: #eaf2fa
+    }
+
+    .deskripsi-p3k .ik {
+      font-size: calc(var(--u)*3);
+      flex: none
+    }
+
+    .deskripsi-p3k b {
+      color: var(--sian);
+      display: block;
+      margin-bottom: .2em;
+      font-size: calc(var(--u)*1.15)
+    }
+
+    .deskripsi-p3k p {
+      font-size: calc(var(--u)*.98);
+      line-height: 1.4;
+      color: #cfe0f0
+    }
+
+    .progres-p3k {
+      position: absolute;
+      left: 44%;
+      top: 91.5%;
+      width: 29%;
+      height: 6%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5em
+    }
+
+    .dotp3k {
+      width: calc(var(--u)*1.6);
+      height: calc(var(--u)*1.6);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .18);
+      border: 2px solid rgba(255, 255, 255, .35);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: calc(var(--u)*.85);
+      font-weight: 700
+    }
+
+    .dotp3k.on {
+      background: #2ecc71;
+      border-color: #2ecc71;
+      color: #04270f
+    }
+
+    /* popup */
+    .tirai {
+      position: absolute;
+      inset: 0;
+      background: rgba(2, 10, 20, .66);
+      backdrop-filter: blur(6px);
+      z-index: 40;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      animation: masuk .2s
+    }
+
+    .tirai.tampil {
+      display: flex
+    }
+
+    .gambar-modal {
+      position: relative;
+      width: 52%;
+      animation: pop .34s cubic-bezier(.2, 1.4, .4, 1)
+    }
+
+    .gambar-modal img {
+      width: 100%;
+      display: block;
+      filter: drop-shadow(0 calc(var(--u)*1) calc(var(--u)*2) rgba(0, 0, 0, .65));
+      border-radius: calc(var(--u)*1)
+    }
+
+    @keyframes pop {
+      from {
+        transform: scale(.25);
+        opacity: 0
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1
+      }
+    }
+
+    .kartu {
+      background: #fff;
+      color: #16283d;
+      border-radius: calc(var(--u)*1.1);
+      width: 54%;
+      padding: calc(var(--u)*1.4) calc(var(--u)*1.7);
+      box-shadow: 0 calc(var(--u)*1) calc(var(--u)*3) rgba(0, 0, 0, .6);
+      animation: pop .34s cubic-bezier(.2, 1.4, .4, 1);
+      position: relative
+    }
+
+    .kartu .kepala {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--u)*.9);
+      margin-bottom: calc(var(--u)*.8)
+    }
+
+    .kartu .kepala img {
+      width: calc(var(--u)*4);
+      height: calc(var(--u)*4);
+      border-radius: 50%;
+      object-fit: cover;
+      border: calc(var(--u)*.15) solid #1c7ed6
+    }
+
+    .kartu h3 {
+      font-size: calc(var(--u)*1.85);
+      color: #0b2545;
+      line-height: 1.2
+    }
+
+    .kartu p {
+      font-size: calc(var(--u)*1.15);
+      line-height: 1.5;
+      color: #2c3e52
+    }
+
+    .kartu .aksi {
+      display: flex;
+      gap: calc(var(--u)*.8);
+      justify-content: flex-end;
+      margin-top: calc(var(--u)*1.1);
+      flex-wrap: wrap
+    }
+
+    .tutup {
+      position: absolute;
+      right: calc(var(--u)*-.8);
+      top: calc(var(--u)*-.8);
+      width: calc(var(--u)*2.9);
+      height: calc(var(--u)*2.9);
+      border-radius: 50%;
+      background: linear-gradient(180deg, #e8524d, #b3241f);
+      border: calc(var(--u)*.2) solid #fff;
+      color: #fff;
+      font-size: calc(var(--u)*1.3);
+      cursor: pointer
+    }
+
+    .tombol {
+      border: none;
+      border-radius: calc(var(--u)*.7);
+      cursor: pointer;
+      font-family: var(--font);
+      font-weight: 800;
+      font-size: calc(var(--u)*1.15);
+      padding: calc(var(--u)*.55) calc(var(--u)*1.2);
+      color: #fff;
+      box-shadow: 0 calc(var(--u)*.3) 0 rgba(0, 0, 0, .3);
+      transition: .15s
+    }
+
+    .tombol:hover {
+      filter: brightness(1.12)
+    }
+
+    .tombol.abu {
+      background: linear-gradient(180deg, #98a6b4, #6c7a89)
+    }
+
+    .tombol.biru {
+      background: linear-gradient(180deg, #3f9ae8, #1256a0)
+    }
+
+    .tombol.hijau {
+      background: linear-gradient(180deg, #5ac878, #238b45)
+    }
+
+    .tombol.oranye {
+      background: linear-gradient(180deg, #f2a45c, #d2761c)
+    }
+
+    .toast {
+      position: absolute;
+      z-index: 30;
+      max-width: 35%;
+      background: #0a2a4a;
+      color: #eaf6ff;
+      border-left: calc(var(--u)*.4) solid var(--sian);
+      border-radius: calc(var(--u)*.6);
+      padding: calc(var(--u)*.65) calc(var(--u)*.85);
+      font-size: calc(var(--u)*1.05);
+      line-height: 1.35;
+      box-shadow: 0 calc(var(--u)*.5) calc(var(--u)*1.4) rgba(0, 0, 0, .6);
+      animation: pop .28s
+    }
+
+    .toast.buruk {
+      border-left-color: var(--merah)
+    }
+
+    .toast b {
+      display: block;
+      color: var(--sian);
+      margin-bottom: .2em
+    }
+
+    /* level 2 kuis */
+    .timerbar {
+      height: calc(var(--u)*.6);
+      border-radius: 999px;
+      background: #00000030;
+      overflow: hidden
+    }
+
+    .timerbar i {
+      display: block;
+      height: 100%;
+      background: linear-gradient(90deg, #2ecc71, #f1c40f, #e74c3c);
+      transition: width .3s linear
+    }
+
+    /* level 3 drag drop */
+    .itemdot {
+      position: absolute;
+      width: calc(var(--u)*1.4);
+      height: calc(var(--u)*1.4);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .25);
+      border: 2px solid rgba(255, 255, 255, .4);
+      top: 1.5%
+    }
+
+    .itemdot.on {
+      background: var(--hijau);
+      border-color: var(--hijau)
+    }
+
+    .dzstat {
+      position: absolute;
+      font-size: calc(var(--u)*2.4);
+      color: #2ecc71;
+      text-shadow: 0 0 10px rgba(46, 204, 113, .8);
+      display: none;
+      pointer-events: none
+    }
+
+    /* sertifikat overlay — menutup penuh teks skor statis pada gambar (x20-90%,y0-27%) */
+    .skorpanel {
+      position: absolute;
+      left: 21%;
+      top: 0%;
+      width: 68%;
+      height: 30%;
+      background: radial-gradient(ellipse at center, #0d2a4d 0%, #081a30 75%, #050f1e 100%);
+      border-radius: 0 0 calc(var(--u)*3) calc(var(--u)*3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .1em;
+      box-shadow: 0 calc(var(--u)*.4) calc(var(--u)*1.2) rgba(0, 0, 0, .5)
+    }
+
+    .bintangbox {
+      font-size: calc(var(--u)*2.1);
+      color: #ffcc33;
+      letter-spacing: .15em;
+      text-shadow: 0 0 10px rgba(255, 204, 51, .8)
+    }
+
+    .skorpanel .angka {
+      font-family: var(--font);
+      font-weight: 900;
+      font-size: calc(var(--u)*3);
+      color: #ffd76a;
+      text-shadow: 0 0 18px rgba(255, 215, 100, .7);
+      letter-spacing: .02em;
+      line-height: 1
+    }
+
+    .skorpanel .status {
+      font-size: calc(var(--u)*1.15);
+      color: #5ef08f;
+      font-weight: 700
+    }
+  </style>
+</head>
+
+<body>
+  <div id="panggung">
+
+    <!-- ============ SCENE 0 — SPLASH ============ -->
+    <section class="adegan aktif" id="s0" style="background-image:url(assets/sc0_splash.jpg)">
+      <button class="hot denyut" data-go="s1" style="left:37%;top:68%;width:24%;height:13%"><span
+          class="tip">Mulai</span></button>
+    </section>
+
+    <!-- ============ SCENE 1 — BERANDA ============ -->
+    <section class="adegan" id="s1" style="background-image:url(assets/sc1_beranda.jpg)">
+      <button class="hot denyut" data-go="s2" style="left:29%;top:34%;width:42%;height:10%"><span class="tip">Belajar
+          materi K3 &amp; grooming</span></button>
+      <button class="hot denyut" data-go="s3" style="left:29%;top:48%;width:42%;height:10%"><span class="tip">Main gim
+          arena pariwisata</span></button>
+      <button class="hot denyut" data-modal="mSet" style="left:29%;top:62%;width:42%;height:10%"><span class="tip">Atur
+          BGM, SFX &amp; narasi</span></button>
+      <button class="hot denyut" data-modal="mExit" style="left:29%;top:76%;width:42%;height:10%"><span
+          class="tip">Keluar dari aplikasi</span></button>
+    </section>
+
+    <!-- ============ SCENE 2 — SELEKSI OPERASI ============ -->
+    <section class="adegan geser" id="s2" style="background-image:url(assets/sc2_seleksi.jpg)">
+      <button class="hot" data-go="s21" style="left:24%;top:33%;width:23%;height:53%"><span class="tip">Ergonomi
+          &amp; Kelayakan Tour</span></button>
+      <button class="hot" data-go="s22" style="left:48%;top:33%;width:23%;height:53%"><span class="tip">Tanggap
+          Darurat Wisata</span></button>
+      <button class="hot" data-go="s23" style="left:71%;top:33%;width:24%;height:53%"><span class="tip">Standar
+          Grooming Pariwisata</span></button>
+      <button class="hot" data-go="s1" style="left:1.5%;top:87%;width:21.5%;height:10%"></button>
+    </section>
+
+    <!-- ============ SCENE 2.1 — HUB IV.a ============ -->
+    <section class="adegan geser" id="s21" style="background-image:url(assets/sc21_hub_a.jpg)">
+      <button class="hot" data-flip="f211" style="left:31%;top:46%;width:57%;height:13%"><span class="tip">Aspek
+          Kesehatan — Ergonomi</span></button>
+      <button class="hot" data-flip="f212" style="left:31%;top:62%;width:57%;height:13%"><span class="tip">Aspek
+          Keselamatan — Kelistrikan</span></button>
+      <button class="hot" data-flip="f213" style="left:31%;top:78%;width:57%;height:13%"><span class="tip">Kesehatan Lingkungan — Lux</span></button>
+      <button class="hot" data-go="s2" style="left:2%;top:91%;width:19%;height:8%"></button>
+    </section>
+
+    <!-- ============ FLIP CARD (2.1.1 / 2.1.2 / 2.1.3 / 2.2.2 / 2.2.3) ============ -->
+    <section class="adegan geser" id="sFlip">
+      <div style="position:absolute;inset:0;background-size:100% 100%;background-position:center" id="flipBg"></div>
+      <button class="hot" id="flipPutar" style="left:0;top:0;width:1px;height:1px"></button>
+      <button class="hot" id="flipPutar2" style="display:none"></button>
+      <button class="hot" id="flipKembali" style="left:1%;top:1%;width:22%;height:9%"></button>
+    </section>
+
+    <!-- ============ SCENE 2.2 — HUB IV.b ============ -->
+    <section class="adegan geser" id="s22" style="background-image:url(assets/sc22_hub_b.jpg)">
+      <button class="hot" data-go="s221" style="left:34%;top:27%;width:45%;height:17%"><span class="tip">Darurat
+          Medis Tour</span></button>
+      <button class="hot" data-flip="f222" style="left:34%;top:47%;width:45%;height:17%"><span class="tip">Evakuasi Kebakaran/Bencana</span></button>
+      <button class="hot" data-flip="f223" style="left:34%;top:68%;width:45%;height:17%"><span class="tip">Sistem
+          Pelaporan Insiden</span></button>
+      <button class="hot" data-go="s2" style="left:1.5%;top:88%;width:17%;height:8%"></button>
+    </section>
+
+    <!-- ============ SCENE 2.2.1 — P3K POINT-AND-CLICK ============ -->
+    <section class="adegan geser" id="s221" style="background-image:url(assets/sc221_p3k.jpg)">
+      <button class="hot p3kitem" data-p3k="kasa" style="left:35%;top:33%;width:11%;height:21%"></button>
+      <button class="hot p3kitem" data-p3k="anti" style="left:47%;top:33%;width:12%;height:21%"></button>
+      <button class="hot p3kitem" data-p3k="salep" style="left:60%;top:33%;width:11%;height:21%"></button>
+      <button class="hot" data-go="s22" style="left:1%;top:88%;width:19%;height:9%"></button>
+      <div class="deskripsi-p3k" id="p3kDesk" style="display:none">
+        <div class="ik" id="p3kIk">🩹</div>
+        <div><b id="p3kJudul"></b>
+          <p id="p3kTeks"></p>
+        </div>
+      </div>
+      <div class="progres-p3k" id="p3kDots"></div>
+      <div class="ov solid" id="p3kCounter"
+        style="left:76.5%;top:1%;width:22%;height:9%;flex-direction:row;gap:.5em;align-items:center;justify-content:center">
+        📋 <span id="p3kCounterTxt" style="color:#5ef08f;font-weight:700">0 / 3 Terbaca</span>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 2.3 — CERMIN GROOMING ============ -->
+    <section class="adegan geser" id="s23" style="background-image:url(assets/sc23_cermin.jpg)">
+      <button class="hot" data-go="s1" style="left:1%;top:87%;width:19%;height:12%"></button>
+      <button class="hot" data-go="s231" style="left:66%;top:87%;width:31%;height:11%"><span class="tip">Mulai inspeksi
+          diri</span></button>
+    </section>
+
+    <!-- ============ SCENE 2.3.1 — DETAIL ATRIBUT ============ -->
+    <section class="adegan geser" id="s231" style="background-image:url(assets/sc231_atribut.jpg)">
+      <button class="hot" data-atr="rambut" style="left:31%;top:68.8%;width:19.7%;height:7.4%"></button>
+      <button class="hot" data-atr="id" style="left:53.4%;top:68.8%;width:19.9%;height:7.4%"></button>
+      <button class="hot" data-atr="sepatu" style="left:75.7%;top:68.8%;width:19.8%;height:7.4%"></button>
+      <button class="hot" data-go="s23" style="left:1.5%;top:1%;width:8%;height:8%"></button>
+      <button class="hot" id="btnLanjutGim" style="left:66%;top:88%;width:30%;height:10%" disabled></button>
+    </section>
+
+    <!-- ============ SCENE 3 — GIM ARENA ============ -->
+    <section class="adegan" id="s3" style="background-image:url(assets/sc3_arena.jpg)">
+      <button class="hot" id="lv1" data-level="0" style="left:6%;top:33%;width:28%;height:45%"><span class="tip">Level
+          1 — Audit Bus &amp; Kubikel Agen</span></button>
+      <button class="hot" id="lv2" data-level="1" style="left:42%;top:11%;width:25%;height:45%"><span class="tip">Level
+          2
+          — Tanggap Darurat Grup Turis</span></button>
+      <button class="hot" id="lv3" data-level="2" style="left:70%;top:15%;width:25%;height:52%"><span class="tip">Level
+          3 — Grooming Pemandu Profesional</span></button>
+      <button class="hot" data-go="s1" style="left:1%;top:88%;width:22%;height:10%"></button>
+      <button class="hot" id="btnPanduan" style="left:81%;top:88%;width:18%;height:10%"><span class="tip">Panduan
+          bermain</span></button>
+    </section>
+
+    <!-- ============ SCENE 3.1 — LEVEL 1 HIDDEN OBJECT ============ -->
+    <section class="adegan" id="s31" style="background-image:url(assets/sc31_level1.jpg)">
+      <button class="hot bulat hz denyut" data-hz="kursi" style="left:22%;top:24%;width:12%;height:20%"></button>
+      <button class="hot bulat hz denyut" data-hz="listrik" style="left:69%;top:52%;width:12%;height:20%"></button>
+      <button class="hot bulat hz denyut" data-hz="lantai" style="left:41%;top:57%;width:14%;height:25%"></button>
+      <button class="hot" id="btnPetunjuk1" style="left:82%;top:84%;width:15%;height:8%"><span
+          class="tip">Petunjuk</span></button>
+      <div class="gearbtn" data-modal="mSet">⚙️</div>
+      <div class="ov solid" style="left:53.5%;top:0.5%;width:18%;height:10.5%">
+        <div class="judul">⏱️ WAKTU TERSISA</div>
+        <div class="nilai" id="l1Waktu">90s</div>
+      </div>
+      <div class="ov solid" style="left:73.5%;top:0.5%;width:18.5%;height:10.5%">
+        <div class="judul">🎯 SKOR</div>
+        <div class="nilai" id="l1Skor">0 / 3</div>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 3.2 — LEVEL 2 SITUATIONAL ============ -->
+    <section class="adegan" id="s32" style="background-image:url(assets/sc32_level2.jpg)">
+      <button class="hot opsi2" data-opsi="0" style="left:25%;top:52%;width:48%;height:7%"></button>
+      <button class="hot opsi2" data-opsi="1" style="left:25%;top:60%;width:48%;height:8%"></button>
+      <button class="hot opsi2" data-opsi="2" style="left:25%;top:69%;width:48%;height:8%"></button>
+      <div class="backbtn" data-go="s3">← KEMBALI</div>
+      <div class="gearbtn" data-modal="mSet">⚙️</div>
+      <div class="ov solid" style="left:55%;top:1%;width:16%;height:9.5%">
+        <div class="judul">⏱️ SISA WAKTU</div>
+        <div class="nilai" id="l2Waktu">15s</div>
+      </div>
+      <div class="ov solid" style="left:73%;top:1%;width:24%;height:9.5%">
+        <div class="judul">❤️ NYAWA</div>
+        <div class="nilai" id="l2Nyawa" style="font-size:calc(var(--u)*1.6)">❤️❤️❤️</div>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 3.3 — LEVEL 3 DRAG & DROP ============ -->
+    <section class="adegan" id="s33" style="background-image:url(assets/sc33_level3.jpg)">
+      <button class="hot" id="itemId" data-item="id" style="left:7%;top:12%;width:12%;height:35%"></button>
+      <button class="hot" id="itemKemeja" data-item="kemeja" style="left:22%;top:12%;width:14%;height:35%"></button>
+      <button class="hot" id="itemSepatu" data-item="sepatu" style="left:7%;top:50%;width:12%;height:35%"></button>
+      <button class="hot" id="itemSandal" data-item="sandal" style="left:22%;top:50%;width:14%;height:35%"></button>
+      <button class="hot dz" data-zona="id" style="left:38%;top:21%;width:7%;height:17%"></button>
+      <button class="hot dz" data-zona="kemeja" style="left:70%;top:28%;width:6%;height:17%"></button>
+      <button class="hot dz" data-zona="sepatu" style="left:40%;top:52%;width:6%;height:20%"></button>
+      <div class="dzstat" id="dzstat-id" style="left:38.5%;top:24%">✔</div>
+      <div class="dzstat" id="dzstat-kemeja" style="left:70.5%;top:31%">✔</div>
+      <div class="dzstat" id="dzstat-sepatu" style="left:40.5%;top:56%">✔</div>
+      <button class="hot" id="btnCekHasil" style="left:81%;top:62%;width:18%;height:11%" disabled></button>
+      <div class="itemdot" id="dot0" style="left:81.3%"></div>
+      <div class="itemdot" id="dot1" style="left:85.8%"></div>
+      <div class="itemdot" id="dot2" style="left:90.3%"></div>
+      <div class="backbtn" data-go="s3">← KEMBALI</div>
+      <div class="gearbtn" data-modal="mSet">⚙️</div>
+      <div class="ov solid" style="left:58%;top:1%;width:16%;height:10%">
+        <div class="judul">⏱️ SISA WAKTU</div>
+        <div class="nilai" id="l3Waktu">60s</div>
+      </div>
+    </section>
+
+    <!-- ============ SCENE 3.4 — SERTIFIKASI ============ -->
+    <section class="adegan" id="s34" style="background-image:url(assets/sc34_sertifikat.jpg)">
+      <div class="skorpanel">
+        <div class="bintangbox" id="sertifBintang">★★★★★</div>
+        <div class="angka" id="sertifSkor">TOTAL SKOR: 0<span style="font-size:.45em;color:#cfe6ff"> / 100</span></div>
+        <div class="status" id="sertifStatus">STATUS: —</div>
+      </div>
+      <button class="hot" id="btnUnduh" style="left:23%;top:87%;width:34%;height:9%"><span class="tip">Unduh sertifikat
+          (PNG)</span></button>
+      <button class="hot" data-go="s1" style="left:58%;top:87%;width:20%;height:9%"><span class="tip">Menu
+          utama</span></button>
+    </section>
+
+    <!-- ============ POPUP PENGATURAN (Scene 4) ============ -->
+    <div class="tirai" id="mSet">
+      <div class="gambar-modal" style="width:46%">
+        <img src="assets/popup_pengaturan.jpg" alt="Sistem jeda / pengaturan">
+        <img src="assets/andi_avatar.png" alt="" style="position:absolute;left:6%;top:16%;width:26%;border-radius:50%;
+      box-shadow:0 0 0 3px #1c7ed6;filter:none">
+        <!-- track BGM: menutup penuh slider statis pada gambar agar tidak tampak dobel -->
+        <div style="position:absolute;left:47%;top:29.1%;width:38%;height:2.6%;border-radius:999px;background:#c7cbce"></div>
+        <div id="fillBgm" style="position:absolute;left:47%;top:29.1%;width:30.4%;height:2.6%;border-radius:999px;
+      background:linear-gradient(180deg,#4aa7ec,#1a5fa0)"></div>
+        <div style="position:absolute;left:86.5%;top:24.5%;width:12%;height:9%;background:#f2f2f2"></div>
+        <div id="txtBgm" style="position:absolute;left:86.5%;top:24.5%;width:12%;height:9%;font-weight:800;color:#12233a;
+      font-size:calc(var(--u)*1.35);display:flex;align-items:center">80%</div>
+        <input type="range" id="rngBgm" min="0" max="100" value="80"
+          style="position:absolute;left:47%;top:24%;width:38%;height:11%;opacity:.001;cursor:pointer">
+        <div id="pinBgm" style="position:absolute;top:26.4%;width:4.5%;height:8%;border-radius:50%;background:#fff;
+      border:2px solid #dbe1e6;box-shadow:0 2px 6px rgba(0,0,0,.4);pointer-events:none;left:75%"></div>
+        <!-- track SFX -->
+        <div style="position:absolute;left:47%;top:47.1%;width:38%;height:2.6%;border-radius:999px;background:#c7cbce"></div>
+        <div id="fillSfx" style="position:absolute;left:47%;top:47.1%;width:22.8%;height:2.6%;border-radius:999px;
+      background:linear-gradient(180deg,#4aa7ec,#1a5fa0)"></div>
+        <div style="position:absolute;left:86.5%;top:42.5%;width:12%;height:9%;background:#f2f2f2"></div>
+        <div id="txtSfx" style="position:absolute;left:86.5%;top:42.5%;width:12%;height:9%;font-weight:800;color:#12233a;
+      font-size:calc(var(--u)*1.35);display:flex;align-items:center">60%</div>
+        <input type="range" id="rngSfx" min="0" max="100" value="60"
+          style="position:absolute;left:47%;top:42%;width:38%;height:11%;opacity:.001;cursor:pointer">
+        <div id="pinSfx" style="position:absolute;top:44.4%;width:4.5%;height:8%;border-radius:50%;background:#fff;
+      border:2px solid #dbe1e6;box-shadow:0 2px 6px rgba(0,0,0,.4);pointer-events:none;left:65%"></div>
+        <button class="hot" id="swVo" style="left:84%;top:58%;width:10%;height:9%;border-radius:999px"><span
+            class="tip">Nyalakan/matikan narasi</span></button>
+        <button class="hot" data-tutup style="left:38%;top:87%;width:22%;height:11%"><span
+            class="tip">Batal</span></button>
+        <button class="hot" id="btnSimpan" style="left:62%;top:87%;width:32%;height:11%"><span class="tip">Simpan &amp;
+            kembali</span></button>
+      </div>
+    </div>
+
+    <!-- ============ POPUP KELUAR (Scene 5) ============ -->
+    <div class="tirai" id="mExit">
+      <div class="gambar-modal" style="width:44%">
+        <img src="assets/popup_keluar.jpg" alt="Konfirmasi keluar">
+        <button class="hot" data-tutup style="left:87%;top:4%;width:10%;height:13%;border-radius:50%"></button>
+        <button class="hot" data-tutup style="left:8%;top:75%;width:38%;height:17%"><span class="tip">Lanjutkan
+            bermain</span></button>
+        <button class="hot" id="btnKeluarYa" style="left:50%;top:75%;width:34%;height:17%"><span class="tip">Tutup
+            aplikasi</span></button>
+      </div>
+    </div>
+
+    <!-- ============ POPUP INFORMASI ============ -->
+    <div class="tirai" id="mInfo">
+      <div class="kartu">
+        <button class="tutup" data-tutup>✕</button>
+        <div class="kepala"><img src="assets/andi_avatar.png" alt="Pak Andi">
+          <h3 id="infoJudul"></h3>
+        </div>
+        <p id="infoIsi"></p>
+        <div class="aksi" id="infoAksi"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="tone.js"></script>
+<script>const __VO_AUDIO__={"Halo! Selamat datang di Gim Edukasi Usaha Layanan Pariwisata. Ketuk tombol Mulai untuk masuk.": "audio/vo_001_d3d42fd49f.m4a", "Halo! Selamat datang di Gim Edukasi Usaha Layanan Pariwisata bersama saya, Pak Andi. Ketuk Belajar Materi untuk memulai, atau Main Gim jika kamu sudah siap ditantang!": "audio/vo_002_5839b0fc32.m4a", "Di Modul empat ini kita akan mempelajari tiga aspek penting operasional pariwisata: ergonomi kelayakan tour, tanggap darurat, dan standar penampilan atau grooming.": "audio/vo_003_56d155e844.m4a", "Keselamatan dan kenyamanan wisatawan dimulai dari kelayakan armada. Pilih salah satu dari tiga aspek berikut.": "audio/vo_004_9f9aebdb3f.m4a", "Saat memandu tour, situasi darurat bisa terjadi kapan saja. Sebagai pramuwisata profesional kita harus selalu siap siaga!": "audio/vo_005_0d4c2222a0.m4a", "Sebagai pemandu wisata, kotak P3K adalah senjata utama kita saat ada wisatawan terluka ringan. Klik satu per satu isi tas untuk melihat kegunaannya.": "audio/vo_006_343071855a.m4a", "Penampilan fisik kita adalah hal pertama yang dilihat wisatawan. Ketuk Mulai Inspeksi Diri untuk memeriksa kelengkapan atribut kerja.": "audio/vo_007_8ec5388174.m4a", "Periksa detail atributmu satu per satu: rambut atau hijab, ID card, dan sepatu lapangan.": "audio/vo_008_76f5c0a627.m4a", "Selamat datang di Gim Arena Pariwisata! Selesaikan tantangan di setiap level, mulai dari mengaudit bus wisata hingga menguasai prosedur darurat dan grooming.": "audio/vo_009_e870b3d5b5.m4a", "Selamat datang di audit bus pariwisata. Tugasmu memastikan bus layak dan aman. Perhatikan area duduk, instalasi listrik, dan kebersihan lantai. Temukan tiga pelanggaran secepat mungkin!": "audio/vo_010_d8b7533d2f.m4a", "Gempa terjadi! Tetap tenang, jangan panik. Keselamatan tamu adalah prioritas nomor satu. Pilih tindakan yang paling tepat.": "audio/vo_011_b849ff29a0.m4a", "Ini tahap akhir. Pastikan seragam dan atributmu sesuai standar profesional. Jangan sampai salah menggunakan alas kaki! Kamu punya waktu enam puluh detik.": "audio/vo_012_a94bf99e0b.m4a", "Luar biasa! Kamu menunjukkan performa yang sangat kompeten. Dengan sertifikat ini kamu resmi menjadi bagian dari tim profesional pariwisata Indonesia.": "audio/vo_013_87ad0ded5b.m4a", "Perjalanan jarak jauh bisa sangat melelahkan bagi wisatawan jika postur duduknya salah. Ketuk tombol putar kartu untuk membaca lima poin penting menjaga kenyamanan fisik penumpang.": "audio/vo_014_c78f4b6d15.m4a", "Postur ergonomis membantu mengurangi kelelahan, mencegah cedera, dan menjaga kenyamanan selama perjalanan jauh: kepala tegak tidak menunduk, punggung menempel sandaran, tangan rileks, kaki menapak rata di lantai, dan lakukan istirahat berkala setiap 1–2 jam.": "audio/vo_015_08910f8faa.m4a", "Fasilitas pengisian daya di dalam bus sangat penting untuk wisatawan, tetapi penggunaannya tidak boleh sembarangan. Pelajari cara mencegah risiko beban lebih dan korsleting listrik selama perjalanan.": "audio/vo_016_2d9fc018c2.m4a", "Gunakan sesuai kapasitas, hindari penggunaan bertumpuk, jangan modifikasi kelistrikan, periksa secara berkala, dan matikan bila tidak digunakan. Beban listrik berlebih dapat menyebabkan korsleting, kerusakan perangkat, hingga kebakaran.": "audio/vo_017_8d6f877b33.m4a", "Selain mesin, lingkungan dalam kabin juga harus sehat! Udara pengap dan lampu terlalu redup bisa membuat penumpang pusing dan mabuk perjalanan. Pelajari standar Lux dan sirkulasi idealnya.": "audio/vo_018_f9235a4907.m4a", "Standar pencahayaan ideal: lampu kabin umum 100–150 Lux, lampu baca individu 150–200 Lux, lampu malam 10–30 Lux. Ventilasi ideal: sirkulasi udara segar 6–10 kali/jam, suhu 22–26°C, kelembapan 40–60% RH.": "audio/vo_019_18a83d96c3.m4a", "Ketika terjadi kondisi darurat seperti kebakaran di lokasi wisata, jangan pernah menggunakan lift! Arahkan seluruh wisatawan dengan tenang melewati tangga darurat menuju titik kumpul aman.": "audio/vo_020_a4c4b40926.m4a", "Prosedur evakuasi darurat: (1) Jangan gunakan lift — dapat mati listrik atau terjebak. (2) Gunakan tangga darurat terdekat yang ditandai rambu EXIT. (3) Menuju titik kumpul aman dan lakukan pendataan rombongan. Tetap tenang, jangan berlari, jangan kembali ke area berbahaya.": "audio/vo_021_a16935c244.m4a", "Setiap kejadian luar biasa seperti kehilangan barang berharga atau kecelakaan harus dilaporkan cepat dan valid. Batas waktu maksimal dua kali dua puluh empat jam melalui sistem digital.": "audio/vo_022_b8c0b2df26.m4a", "SOP pelaporan insiden: laporkan maksimal 2×24 jam sejak kejadian, gunakan sistem pelaporan digital (sertakan kronologi, lokasi, dokumentasi), laporan diteruskan ke kantor pusat/instansi terkait, lalu tim pusat menindaklanjuti hingga kasus ditutup. Jangan menunda pelaporan.": "audio/vo_023_4679410874.m4a", "KASA STERIL dan PERBAN. Digunakan untuk menutup luka agar tetap bersih, menghentikan perdarahan ringan, dan melindungi luka dari kontaminasi kotoran atau bakteri. Balut dengan tekanan secukupnya dan jangan terlalu ketat agar aliran darah tetap lancar.": "audio/vo_024_2bd79a43b2.m4a", "ANTISEPTIK CAIR. Membersihkan luka dari kuman sebelum ditutup. Tuangkan pada kasa, lalu usapkan dari bagian tengah luka ke arah luar. Hindari penggunaan pada luka bakar berat atau luka yang sangat dalam.": "audio/vo_025_0d18254ce9.m4a", "SALEP LUKA. Mempercepat penyembuhan luka ringan, lecet, atau gigitan serangga, serta mencegah infeksi. Oleskan tipis pada kulit yang sudah dibersihkan; hentikan pemakaian bila timbul reaksi alergi.": "audio/vo_026_c9634592de.m4a", "RAMBUT / HIJAB. Kerapian, kebersihan, dan kesesuaian gaya rambut atau hijab sesuai standar pramuwisata profesional. Rambut dipotong/ditata rapi, tidak menutupi wajah; hijab disematkan rapi tanpa juntaian yang mengganggu aktivitas lapangan.": "audio/vo_027_8de5606322.m4a", "ID CARD / LENCANA PRAMUWISATA. ID Card dan lencana wajib digunakan dengan benar, terbaca jelas, dan selalu dibawa saat bertugas. ID Card digantung pada lanyard resmi di dada tengah dengan foto dan nama menghadap ke depan.": "audio/vo_028_0fad8d1406.m4a", "SEPATU LAPANGAN. Sepatu harus bersih, terawat, nyaman digunakan, dan sesuai kebutuhan aktivitas lapangan. Gunakan sepatu tertutup dengan sol anti-selip; sandal jepit dilarang karena berisiko cedera.": "audio/vo_029_1d4ff1ac92.m4a", "KURSI RUSAK. Sandaran kursi patah diperbaiki — penumpang aman saat pengereman mendadak.": "audio/vo_030_bce65b8de9.m4a", "STOP KONTAK KELEBIHAN BEBAN. Colokan bertumpuk dilepas dan kabel dirapikan — risiko korsleting hilang.": "audio/vo_031_8e6aea0eb1.m4a", "LANTAI BASAH dan LICIN. Tumpahan dibersihkan dan dipasang rambu peringatan — risiko terpeleset teratasi.": "audio/vo_032_99303901ea.m4a", "Waktu habis! Nyawa berkurang satu.": "audio/vo_033_6766cd920c.m4a", "Saat guncangan: lindungi kepala di bawah furnitur kokoh. Setelah reda: evakuasi lewat tangga darurat — jangan gunakan lift.": "audio/vo_034_3ea8d7d024.m4a", "Berkumpul di titik kumpul lalu hitung jumlah rombongan. Jangan pernah kembali ke area berbahaya.": "audio/vo_035_ec12256b21.m4a", "Prosedur: CEK kondisi korban → AMANKAN → TINDAK pertolongan pertama → LAPOR maksimal 2×24 jam.": "audio/vo_036_3d0aadc1c2.m4a", "Item ini tidak sesuai standar grooming pemandu wisata. Ditolak otomatis.": "audio/vo_037_edeee48af9.m4a", "Level ini masih terkunci. Selesaikan tantangan sebelumnya terlebih dahulu.": "audio/vo_038_82c4114784.m4a"};</script>
+  <script>
+    /* =====================================================================
+       Logika gim — alur mengikuti storyboard P_ULP_4
+       ===================================================================== */
+    const panggung = document.getElementById('panggung');
+    function skala() { panggung.style.setProperty('--u', (panggung.clientWidth / 100) + 'px'); }
+    addEventListener('resize', skala); skala();
+
+    /* ---------- AUDIO ---------- */
+    const Suara = (() => {
+      let siap = false, master, bgmGain, sfxGain, bgmTimer, aktif = true, voAktif = true, volBgm = .8, volSfx = .6, voAudio = null;
+      function init() {
+        if (siap) return; siap = true;
+        Tone.start();
+        master = new Tone.Gain(1).toDestination();
+        bgmGain = new Tone.Gain(.15 * volBgm).connect(master);
+        sfxGain = new Tone.Gain(volSfx).connect(master);
+      }
+      function nada(f, d, t = 'sine', g = .18, slide) {
+        if (!aktif) return; init();
+        const synth = new Tone.Synth({ oscillator: { type: t }, envelope: { attack: .012, decay: d, sustain: 0, release: .02 } }).connect(sfxGain);
+        synth.volume.value = Tone.gainToDb(g);
+        const now = Tone.now();
+        synth.triggerAttack(f, now);
+        if (slide) synth.oscillator.frequency.exponentialRampToValueAtTime(slide, now + d);
+        synth.triggerRelease(now + d);
+        setTimeout(() => synth.dispose(), (d + .3) * 1000);
+      }
+      const sfx = {
+        klik: () => nada(560, .07, 'square', .14, 360), hover: () => nada(940, .04, 'sine', .06),
+        swish: () => nada(300, .28, 'sine', .1, 1200),
+        benar: () => { nada(659, .12); setTimeout(() => nada(880, .16), 90); setTimeout(() => nada(1175, .3), 190); },
+        salah: () => nada(150, .32, 'sawtooth', .17, 90),
+        popup: () => nada(740, .13, 'sine', .13, 1150), tutup: () => nada(430, .09, 'square', .11, 240),
+        kunci: () => { nada(190, .13, 'square', .14); setTimeout(() => nada(140, .2, 'square', .14), 130); },
+        ting: () => nada(1320, .45, 'sine', .14), tick: () => nada(1050, .03, 'square', .06),
+        menang: () => [0, 110, 220, 400].forEach((d, i) => setTimeout(() => nada([523, 659, 784, 1046][i], .34), d))
+      };
+      const pola = [329.6, 392, 493.9, 587.3, 493.9, 392];
+      function bgm() {
+        init(); if (bgmTimer) return; let i = 0;
+        bgmTimer = setInterval(() => {
+          if (!aktif) return; const f = pola[i % pola.length]; i++;
+          const synth = new Tone.Synth({ oscillator: { type: 'triangle' }, envelope: { attack: .15, decay: 1.1, sustain: 0, release: .05 } }).connect(bgmGain);
+          synth.volume.value = Tone.gainToDb(.09);
+          const now = Tone.now();
+          synth.triggerAttackRelease(f, 1.1, now);
+          setTimeout(() => synth.dispose(), 1300);
+        }, 580);
+      }
+      const POLA_LAKI = /male|pria|man\b|ardi|andika|budi|dimas|bayu|eko|hendra|joko|putra|gadu|rizky|arif/i;
+      function suaraLaki() {
+        const idV = speechSynthesis.getVoices().filter(x => x.lang && x.lang.toLowerCase().startsWith('id'));
+        return idV.find(x => POLA_LAKI.test(x.name))
+          || speechSynthesis.getVoices().find(x => POLA_LAKI.test(x.name) && /id|en/i.test(x.lang))
+          || idV[0] || null;
+      }
+      function vo(t) {
+        if (!aktif || !voAktif) return;
+        stopVoAudio();
+        if (typeof __VO_AUDIO__ !== 'undefined' && __VO_AUDIO__[t]) {
+          voAudio = new Audio(__VO_AUDIO__[t]); voAudio.volume = 1; voAudio.play(); return;
+        }
+        if (!('speechSynthesis' in window)) return;
+        speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = 'id-ID'; u.volume = 1;
+        const v = suaraLaki();
+        if (v) { u.voice = v; u.pitch = POLA_LAKI.test(v.name) ? 1 : .78; } else u.pitch = .78;
+        u.rate = .98;
+        speechSynthesis.speak(u);
+      }
+      function stopVoAudio() { if (voAudio) { voAudio.pause(); voAudio = null; } }
+      return {
+        sfx, bgm, init, vo, stopVo: () => { stopVoAudio(); speechSynthesis.cancel(); },
+        setBgm: v => { volBgm = v; if (bgmGain) bgmGain.gain.value = .15 * v; },
+        setSfx: v => { volSfx = v; if (sfxGain) sfxGain.gain.value = v; },
+        setAktif: v => { aktif = v; if (!v) speechSynthesis.cancel(); },
+        setVo: v => { voAktif = v; if (!v) speechSynthesis.cancel(); },
+        redam: d => { if (bgmGain) bgmGain.gain.value = (d ? .03 : .15) * volBgm; }
+      };
+    })();
+
+    /* ---------- PROGRES ---------- */
+    const KUNCI = 'ulp4_progress';
+    let progres = JSON.parse(localStorage.getItem(KUNCI) || '{"baca":{},"insp":0,"level":{}}');
+    const simpan = () => localStorage.setItem(KUNCI, JSON.stringify(progres));
+
+    /* ---------- NARASI ---------- */
+    const VO = {
+      s0: "Halo! Selamat datang di Gim Edukasi Usaha Layanan Pariwisata. Ketuk tombol Mulai untuk masuk.",
+      s1: "Halo! Selamat datang di Gim Edukasi Usaha Layanan Pariwisata bersama saya, Pak Andi. Ketuk Belajar Materi untuk memulai, atau Main Gim jika kamu sudah siap ditantang!",
+      s2: "Di Modul empat ini kita akan mempelajari tiga aspek penting operasional pariwisata: ergonomi kelayakan tour, tanggap darurat, dan standar penampilan atau grooming.",
+      s21: "Keselamatan dan kenyamanan wisatawan dimulai dari kelayakan armada. Pilih salah satu dari tiga aspek berikut.",
+      s22: "Saat memandu tour, situasi darurat bisa terjadi kapan saja. Sebagai pramuwisata profesional kita harus selalu siap siaga!",
+      s221: "Sebagai pemandu wisata, kotak P3K adalah senjata utama kita saat ada wisatawan terluka ringan. Klik satu per satu isi tas untuk melihat kegunaannya.",
+      s23: "Penampilan fisik kita adalah hal pertama yang dilihat wisatawan. Ketuk Mulai Inspeksi Diri untuk memeriksa kelengkapan atribut kerja.",
+      s231: "Periksa detail atributmu satu per satu: rambut atau hijab, ID card, dan sepatu lapangan.",
+      s3: "Selamat datang di Gim Arena Pariwisata! Selesaikan tantangan di setiap level, mulai dari mengaudit bus wisata hingga menguasai prosedur darurat dan grooming.",
+      s31: "Selamat datang di audit bus pariwisata. Tugasmu memastikan bus layak dan aman. Perhatikan area duduk, instalasi listrik, dan kebersihan lantai. Temukan tiga pelanggaran secepat mungkin!",
+      s32: "Gempa terjadi! Tetap tenang, jangan panik. Keselamatan tamu adalah prioritas nomor satu. Pilih tindakan yang paling tepat.",
+      s33: "Ini tahap akhir. Pastikan seragam dan atributmu sesuai standar profesional. Jangan sampai salah menggunakan alas kaki! Kamu punya waktu enam puluh detik.",
+      s34: "Luar biasa! Kamu menunjukkan performa yang sangat kompeten. Dengan sertifikat ini kamu resmi menjadi bagian dari tim profesional pariwisata Indonesia."
+    };
+
+    /* ---------- FLIP CARD (data materi) ---------- */
+    const FLIP = {
+      f211: {
+        key: 'a1', bg: 'sc211_ergonomi', kembali: 's21',
+        vo: 'Perjalanan jarak jauh bisa sangat melelahkan bagi wisatawan jika postur duduknya salah. Ketuk tombol putar kartu untuk membaca lima poin penting menjaga kenyamanan fisik penumpang.',
+        isi: 'Postur ergonomis membantu mengurangi kelelahan, mencegah cedera, dan menjaga kenyamanan selama perjalanan jauh: kepala tegak tidak menunduk, punggung menempel sandaran, tangan rileks, kaki menapak rata di lantai, dan lakukan istirahat berkala setiap 1–2 jam.'
+      },
+      f212: {
+        key: 'a2', bg: 'sc212_kelistrikan', kembali: 's21',
+        vo: 'Fasilitas pengisian daya di dalam bus sangat penting untuk wisatawan, tetapi penggunaannya tidak boleh sembarangan. Pelajari cara mencegah risiko beban lebih dan korsleting listrik selama perjalanan.',
+        isi: 'Gunakan sesuai kapasitas, hindari penggunaan bertumpuk, jangan modifikasi kelistrikan, periksa secara berkala, dan matikan bila tidak digunakan. Beban listrik berlebih dapat menyebabkan korsleting, kerusakan perangkat, hingga kebakaran.'
+      },
+      f213: {
+        key: 'a3', bg: 'sc213_lingkungan', kembali: 's21',
+        vo: 'Selain mesin, lingkungan dalam kabin juga harus sehat! Udara pengap dan lampu terlalu redup bisa membuat penumpang pusing dan mabuk perjalanan. Pelajari standar Lux dan sirkulasi idealnya.',
+        isi: 'Standar pencahayaan ideal: lampu kabin umum 100–150 Lux, lampu baca individu 150–200 Lux, lampu malam 10–30 Lux. Ventilasi ideal: sirkulasi udara segar 6–10 kali/jam, suhu 22–26°C, kelembapan 40–60% RH.'
+      },
+      f222: {
+        key: 'b2', bg: 'sc222_evakuasi', kembali: 's22',
+        vo: 'Ketika terjadi kondisi darurat seperti kebakaran di lokasi wisata, jangan pernah menggunakan lift! Arahkan seluruh wisatawan dengan tenang melewati tangga darurat menuju titik kumpul aman.',
+        isi: 'Prosedur evakuasi darurat: (1) Jangan gunakan lift — dapat mati listrik atau terjebak. (2) Gunakan tangga darurat terdekat yang ditandai rambu EXIT. (3) Menuju titik kumpul aman dan lakukan pendataan rombongan. Tetap tenang, jangan berlari, jangan kembali ke area berbahaya.'
+      },
+      f223: {
+        key: 'b3', bg: 'sc223_pelaporan', kembali: 's22',
+        vo: 'Setiap kejadian luar biasa seperti kehilangan barang berharga atau kecelakaan harus dilaporkan cepat dan valid. Batas waktu maksimal dua kali dua puluh empat jam melalui sistem digital.',
+        isi: 'SOP pelaporan insiden: laporkan maksimal 2×24 jam sejak kejadian, gunakan sistem pelaporan digital (sertakan kronologi, lokasi, dokumentasi), laporan diteruskan ke kantor pusat/instansi terkait, lalu tim pusat menindaklanjuti hingga kasus ditutup. Jangan menunda pelaporan.'
+      }
+    };
+    let flipAktif = null, flipTerbalik = false;
+    function bukaFlip(id) {
+      const F = FLIP[id]; if (!F) return; flipAktif = id; flipTerbalik = false;
+      document.getElementById('flipBg').style.backgroundImage = `url(assets/${F.bg}.jpg)`;
+      document.getElementById('flipKembali').onclick = () => { Suara.sfx.klik(); ke(F.kembali); };
+      const kb = document.getElementById('flipKembali');
+      const posKembali = { f211: [1, 24, 88, 9], f212: [1, 19, 88, 11], f213: [1, 19, 88, 11], f222: [1, 24, 91, 8], f223: [1, 20, 86, 10] }[id];
+      kb.style.left = posKembali[0] + '%'; kb.style.width = (posKembali[1] - posKembali[0]) + '%';
+      kb.style.top = posKembali[2] + '%'; kb.style.height = posKembali[3] + '%';
+      const btn = document.getElementById('flipPutar');
+      // posisi tombol PUTAR KARTU berbeda tiap sub-materi (lihat storyboard)
+      // [kiri, kanan, atas] dalam persen — diukur ulang dari latar revisi
+      const pos = { f211: [34, 66, 84], f212: [35, 62, 88], f213: [41, 66, 83], f222: [28, 73, 15], f223: [35, 73, 13] }[id];
+      btn.style.left = pos[0] + '%'; btn.style.width = (pos[1] - pos[0]) + '%'; btn.style.top = pos[2] + '%';
+      btn.style.height = (pos[3] || 11) + '%';
+      /* Sebagian latar menyediakan DUA pemicu balik kartu — mis. tombol merah
+         "MULAI LAPORAN INSIDEN" pada f223. Yang kedua opsional. */
+      const btn2 = document.getElementById('flipPutar2');
+      const pos2 = { f223: [27, 62, 82, 11] }[id];
+      if (pos2) {
+        btn2.style.display = 'block';
+        btn2.style.left = pos2[0] + '%'; btn2.style.width = (pos2[1] - pos2[0]) + '%';
+        btn2.style.top = pos2[2] + '%'; btn2.style.height = pos2[3] + '%';
+      } else btn2.style.display = 'none';
+      const balik = () => {
+        Suara.sfx.swish(); flipTerbalik = true;
+        progres.baca[F.key] = true; simpan();
+        popupInfo('✅ MATERI DIBACA', F.isi, [{ t: 'TUTUP', k: 'hijau' }]);
+        Suara.vo(F.isi);
+      };
+      btn.onclick = balik; btn2.onclick = balik;
+      ke('sFlip', 'geser');
+      setTimeout(() => Suara.vo(F.vo), 450);
+    }
+
+    /* ---------- ROUTER ---------- */
+    let adeganAktif = 's0';
+    function ke(id, efek) {
+      const dari = document.getElementById(adeganAktif), tuju = document.getElementById(id); if (!tuju) return;
+      Suara.stopVo();
+      if (id !== 's31') hentikanL1(); if (id !== 's32') hentikanL2(); if (id !== 's33') hentikanL3();
+      if (dari) dari.classList.remove('aktif', 'geser');
+      tuju.classList.remove('aktif', 'geser'); void tuju.offsetWidth;
+      tuju.classList.add('aktif'); if (efek) tuju.classList.add(efek);
+      adeganAktif = id;
+      if (VO[id]) setTimeout(() => Suara.vo(VO[id]), 420);
+      if (id === 's221') mulaiP3K();
+      if (id === 's231') mulaiAtribut();
+      if (id === 's3') gambarArena();
+      if (id === 's31') mulaiL1();
+      if (id === 's32') mulaiL2();
+      if (id === 's33') mulaiL3();
+      if (id === 's34') gambarSertifikat();
+    }
+
+    /* ---------- POPUP ---------- */
+    function bukaTirai(id) { Suara.sfx.popup(); Suara.redam(true); document.getElementById(id).classList.add('tampil'); }
+    function tutupTirai(el) { Suara.sfx.tutup(); Suara.redam(false); el.classList.remove('tampil'); }
+    function popupInfo(judul, isi, aksi) {
+      document.getElementById('infoJudul').innerHTML = judul;
+      document.getElementById('infoIsi').innerHTML = isi;
+      const w = document.getElementById('infoAksi'); w.innerHTML = '';
+      (aksi || [{ t: 'TUTUP', k: 'abu' }]).forEach(a => {
+        const b = document.createElement('button'); b.className = 'tombol ' + (a.k || 'biru'); b.textContent = a.t;
+        b.onclick = () => { Suara.sfx.klik(); tutupTirai(document.getElementById('mInfo')); a.f && a.f(); };
+        w.appendChild(b);
+      });
+      bukaTirai('mInfo');
+    }
+    function toast(scene, ev, html, buruk) {
+      const s = document.getElementById(scene), d = document.createElement('div');
+      d.className = 'toast' + (buruk ? ' buruk' : ''); d.innerHTML = html;
+      const r = s.getBoundingClientRect();
+      d.style.left = Math.min(Math.max(ev.clientX - r.left - r.width * .17, r.width * .02), r.width * .6) + 'px';
+      d.style.top = Math.min(Math.max(ev.clientY - r.top - r.height * .15, r.height * .02), r.height * .78) + 'px';
+      s.appendChild(d); setTimeout(() => d.remove(), 3000);
+    }
+
+    /* ---------- 2.2.1 P3K ---------- */
+    const P3K = [
+      {
+        id: 'kasa', ik: '🩹', n: 'KASA STERIL &amp; PERBAN',
+        d: 'Digunakan untuk menutup luka agar tetap bersih, menghentikan perdarahan ringan, dan melindungi luka dari kontaminasi kotoran atau bakteri. Balut dengan tekanan secukupnya dan jangan terlalu ketat agar aliran darah tetap lancar.'
+      },
+      {
+        id: 'anti', ik: '🧴', n: 'ANTISEPTIK CAIR',
+        d: 'Membersihkan luka dari kuman sebelum ditutup. Tuangkan pada kasa, lalu usapkan dari bagian tengah luka ke arah luar. Hindari penggunaan pada luka bakar berat atau luka yang sangat dalam.'
+      },
+      {
+        id: 'salep', ik: '💊', n: 'SALEP LUKA',
+        d: 'Mempercepat penyembuhan luka ringan, lecet, atau gigitan serangga, serta mencegah infeksi. Oleskan tipis pada kulit yang sudah dibersihkan; hentikan pemakaian bila timbul reaksi alergi.'
+      }
+    ];
+    let p3kDibaca = {};
+    function mulaiP3K() {
+      p3kDibaca = {};
+      document.getElementById('p3kDesk').style.display = 'none';
+      document.getElementById('p3kDots').innerHTML = P3K.map((_, i) => `<div class="dotp3k" id="dotp3k${i}">${i + 1}</div>`).join('');
+      document.getElementById('p3kCounterTxt').textContent = '0 / 3 Terbaca';
+    }
+    document.querySelectorAll('.p3kitem').forEach(el => {
+      el.onclick = () => {
+        const x = P3K.find(p => p.id === el.dataset.p3k); Suara.sfx.ting();
+        document.getElementById('p3kIk').textContent = x.ik;
+        document.getElementById('p3kJudul').innerHTML = x.n;
+        document.getElementById('p3kTeks').innerHTML = x.d;
+        document.getElementById('p3kDesk').style.display = 'flex';
+        Suara.vo(x.n.replace(/&amp;/g, 'dan') + '. ' + x.d);
+        if (!p3kDibaca[x.id]) {
+          p3kDibaca[x.id] = true;
+          const idx = P3K.findIndex(p => p.id === x.id);
+          document.getElementById('dotp3k' + idx).classList.add('on');
+          document.getElementById('p3kCounterTxt').textContent = Object.keys(p3kDibaca).length + ' / 3 Terbaca';
+          if (Object.keys(p3kDibaca).length === 3) {
+            progres.baca.b1 = true; simpan(); Suara.sfx.menang();
+            setTimeout(() => popupInfo('✅ INVENTARIS P3K SELESAI DIBACA',
+              'Seluruh isi tas P3K berhasil dipelajari. Ingat, P3K bukan pengganti perawatan medis lanjutan — segera rujuk ke tenaga medis jika diperlukan.',
+              [{ t: 'KEMBALI KE HUB', k: 'abu', f: () => ke('s22') }, { t: 'LANJUT: EVAKUASI →', k: 'hijau', f: () => bukaFlip('f222') }]), 700);
+          }
+        }
+      };
+    });
+
+    /* ---------- 2.3.1 INSPEKSI ATRIBUT ---------- */
+    const ATRIBUT = {
+      rambut: ['💇', 'RAMBUT / HIJAB', 'Kerapian, kebersihan, dan kesesuaian gaya rambut atau hijab sesuai standar pramuwisata profesional. Rambut dipotong/ditata rapi, tidak menutupi wajah; hijab disematkan rapi tanpa juntaian yang mengganggu aktivitas lapangan.'],
+      id: ['🪪', 'ID CARD / LENCANA PRAMUWISATA', 'ID Card dan lencana wajib digunakan dengan benar, terbaca jelas, dan selalu dibawa saat bertugas. ID Card digantung pada lanyard resmi di dada tengah dengan foto dan nama menghadap ke depan.'],
+      sepatu: ['👞', 'SEPATU LAPANGAN', 'Sepatu harus bersih, terawat, nyaman digunakan, dan sesuai kebutuhan aktivitas lapangan. Gunakan sepatu tertutup dengan sol anti-selip; sandal jepit dilarang karena berisiko cedera.']
+    };
+    let atrDiperiksa = {};
+    function mulaiAtribut() {
+      atrDiperiksa = {};
+      document.getElementById('btnLanjutGim').disabled = true;
+    }
+    document.querySelectorAll('[data-atr]').forEach(el => {
+      el.onclick = () => {
+        const a = ATRIBUT[el.dataset.atr]; Suara.sfx.ting();
+        popupInfo(a[0] + ' ' + a[1], a[2]);
+        Suara.vo(a[1] + '. ' + a[2]);
+        if (!atrDiperiksa[el.dataset.atr]) {
+          atrDiperiksa[el.dataset.atr] = true;
+          const n = Object.keys(atrDiperiksa).length;
+          progres.insp = n; simpan();
+          if (n === 3) { document.getElementById('btnLanjutGim').disabled = false; Suara.sfx.menang(); }
+        }
+      };
+    });
+    document.getElementById('btnLanjutGim').onclick = () => { if (!document.getElementById('btnLanjutGim').disabled) { Suara.sfx.klik(); ke('s3'); } };
+
+    /* ---------- SCENE 3 : ARENA & KUNCI LEVEL ---------- */
+    const LEVEL = [
+      { id: 'l1', ke: 's31', nama: 'Level 1: Audit Bus Wisata' },
+      { id: 'l2', ke: 's32', nama: 'Level 2: Tanggap Darurat Grup Turis' },
+      { id: 'l3', ke: 's33', nama: 'Level 3: Grooming Pemandu Profesional' }];
+    const terbuka = i => i === 0 || !!progres.level[LEVEL[i - 1].id];
+    function gambarArena() {
+      LEVEL.forEach((L, i) => {
+        const b = document.getElementById('lv' + (i + 1));
+        b.classList.toggle('kunci', !terbuka(i));
+        b.classList.toggle('denyut', terbuka(i) && !progres.level[L.id]);
+        b.querySelector('.tip').innerHTML = terbuka(i)
+          ? (progres.level[L.id] ? `${L.nama} — ${progres.level[L.id].skor} poin` : `${L.nama} — mulai!`)
+          : `Terkunci · selesaikan ${LEVEL[i - 1].nama} dulu`;
+      });
+    }
+    document.getElementById('btnPanduan').onclick = () => {
+      Suara.sfx.klik();
+      popupInfo('🗺️ PANDUAN ARENA',
+        '1️⃣ Level 1 — audit interior bus: klik 3 objek pelanggaran K3 sebelum waktu habis. Klik salah mengurangi 5 detik.<br>' +
+        '2️⃣ Level 2 — jawab 3 situasi darurat gempa; setiap kesalahan mengurangi 1 nyawa, 15 detik per soal.<br>' +
+        '3️⃣ Level 3 — seret 3 atribut grooming yang benar ke tubuh pemandu dalam 60 detik; item pengecoh ditolak otomatis.');
+    };
+
+    /* ---------- LEVEL 1 : HIDDEN OBJECT ---------- */
+    const PELANGGARAN = {
+      kursi: ['KURSI RUSAK', 'Sandaran kursi patah diperbaiki — penumpang aman saat pengereman mendadak.'],
+      listrik: ['STOP KONTAK KELEBIHAN BEBAN', 'Colokan bertumpuk dilepas dan kabel dirapikan — risiko korsleting hilang.'],
+      lantai: ['LANTAI BASAH &amp; LICIN', 'Tumpahan dibersihkan dan dipasang rambu peringatan — risiko terpeleset teratasi.']
+    };
+    let g1 = { sisa: 90, skor: 0, temu: 0, petunjuk: 3, timer: null };
+    function hentikanL1() { if (g1.timer) { clearInterval(g1.timer); g1.timer = null; } }
+    function gambarL1() {
+      const w = document.getElementById('l1Waktu'); if (w) w.textContent = Math.max(0, g1.sisa) + 's';
+      const s = document.getElementById('l1Skor'); if (s) s.textContent = g1.temu + ' / 3';
+    }
+    function mulaiL1() {
+      hentikanL1(); g1 = { sisa: 90, skor: 0, temu: 0, petunjuk: 3, timer: null };
+      document.querySelectorAll('#s31 .hz').forEach(h => { h.classList.remove('pilih-benar'); h.classList.add('denyut'); h.disabled = false; });
+      gambarL1();
+      g1.timer = setInterval(() => {
+        g1.sisa--; gambarL1();
+        if (g1.sisa <= 15 && g1.sisa > 0) Suara.sfx.tick();
+        if (g1.sisa <= 0) { hentikanL1(); gagal('LEVEL 1 GAGAL', 'Waktu habis sebelum ketiga pelanggaran ditemukan.', 's31'); }
+      }, 1000);
+    }
+    document.querySelectorAll('#s31 .hz').forEach(h => {
+      h.addEventListener('click', e => {
+        if (h.classList.contains('pilih-benar')) return;
+        const d = PELANGGARAN[h.dataset.hz];
+        h.classList.add('pilih-benar'); h.classList.remove('denyut'); h.disabled = true;
+        Suara.sfx.benar(); g1.temu++; g1.skor += Math.round(30 / 3); gambarL1();
+        toast('s31', e, `<b>${d[0]}</b>${d[1]}`); Suara.vo(d[0].replace(/&amp;/g, 'dan') + '. ' + d[1]);
+        if (g1.temu === 3) { hentikanL1(); setTimeout(selesaiL1, 900); }
+      });
+    });
+    document.getElementById('btnPetunjuk1').onclick = ev => {
+      ev.stopPropagation();
+      if (g1.petunjuk <= 0) { Suara.sfx.kunci(); return; }
+      g1.petunjuk--; Suara.sfx.klik();
+      document.querySelectorAll('#s31 .hz:not(.pilih-benar)').forEach(h => {
+        h.animate([{ boxShadow: '0 0 0 0 rgba(255,255,255,0)' }, { boxShadow: '0 0 0 8px rgba(255,255,255,.8)' }, { boxShadow: '0 0 0 0 rgba(255,255,255,0)' }],
+          { duration: 500, iterations: 3 });
+      });
+    };
+    function selesaiL1() {
+      const bonus = Math.min(10, Math.round(g1.sisa / 9)), skor = Math.min(100, g1.skor + bonus);
+      progres.level.l1 = { skor }; simpan(); Suara.sfx.menang();
+      popupInfo('✅ LEVEL 1 SELESAI', 'Ketiga pelanggaran K3 di interior bus berhasil kamu temukan dan perbaiki.',
+        [{ t: 'MENU LEVEL', k: 'abu', f: () => ke('s3') }, { t: 'LANJUT KE LEVEL 2 →', k: 'hijau', f: () => ke('s32') }]);
+    }
+
+    /* ---------- LEVEL 2 : SITUATIONAL GEMPA ---------- */
+    const SOAL2 = [
+      {
+        q: 'Saat terjadi gempa di dalam hotel bertingkat bersama rombongan wisata, tindakan terbaik sebagai pemandu wisata adalah…',
+        o: ['Segera menuju lift untuk evakuasi ke luar hotel.',
+          'Berlindung di bawah furnitur kokoh, lalu evakuasi melalui tangga darurat.',
+          'Tetap di dalam kamar dan menunggu arahan dari pihak hotel.'], b: 1,
+        f: 'Saat guncangan: lindungi kepala di bawah furnitur kokoh. Setelah reda: evakuasi lewat tangga darurat — jangan gunakan lift.'
+      },
+      {
+        q: 'Setelah tiba di luar gedung bersama rombongan, langkah berikutnya yang benar adalah…',
+        o: ['Membiarkan tamu menyebar mencari kendaraan masing-masing.',
+          'Berkumpul di titik kumpul (assembly point) dan melakukan pendataan rombongan.',
+          'Kembali ke dalam gedung mengambil barang bawaan tamu.'], b: 1,
+        f: 'Berkumpul di titik kumpul lalu hitung jumlah rombongan. Jangan pernah kembali ke area berbahaya.'
+      },
+      {
+        q: 'Seorang wisatawan mengalami luka lecet saat evakuasi. Tindakan pertama pemandu adalah…',
+        o: ['Membersihkan luka dengan antiseptik, menutup dengan kasa steril, lalu melaporkan insiden.',
+          'Menunggu petugas medis datang tanpa tindakan apa pun.',
+          'Memberi obat minum yang dibawa wisatawan lain.'], b: 0,
+        f: 'Prosedur: CEK kondisi korban → AMANKAN → TINDAK pertolongan pertama → LAPOR maksimal 2×24 jam.'
+      }
+    ];
+    let g2 = { i: 0, nyawa: 3, benar: 0, sisa: 15, timer: null };
+    function hentikanL2() { if (g2.timer) { clearInterval(g2.timer); g2.timer = null; } }
+    function mulaiL2() { hentikanL2(); g2 = { i: 0, nyawa: 3, benar: 0, sisa: 15, timer: null }; siapkanSoal2(); }
+    function gambarL2() {
+      const w = document.getElementById('l2Waktu'); if (w) w.textContent = Math.max(0, g2.sisa) + 's';
+      const n = document.getElementById('l2Nyawa'); if (n) n.textContent = '❤️'.repeat(Math.max(0, g2.nyawa)) + '🖤'.repeat(3 - Math.max(0, g2.nyawa));
+    }
+    function tengahScene(id) { const r = document.getElementById(id).getBoundingClientRect(); return { clientX: r.left + r.width * .5, clientY: r.top + r.height * .3 }; }
+    function siapkanSoal2() {
+      hentikanL2();
+      document.querySelectorAll('#s32 .opsi2').forEach(b => { b.classList.remove('pilih-benar', 'pilih-salah'); b.disabled = false; });
+      g2.sisa = 15; gambarL2();
+      g2.timer = setInterval(() => {
+        g2.sisa--; gambarL2();
+        if (g2.sisa <= 5 && g2.sisa > 0) Suara.sfx.tick();
+        if (g2.sisa <= 0) { hentikanL2(); habisWaktuSoal2(); }
+      }, 1000);
+    }
+    function habisWaktuSoal2() {
+      document.querySelectorAll('#s32 .opsi2').forEach(x => x.disabled = true);
+      g2.nyawa--; gambarL2(); Suara.sfx.salah();
+      toast('s32', tengahScene('s32'), '<b>⏰ WAKTU HABIS!</b>Kamu tidak sempat menjawab. Nyawa berkurang satu.', true);
+      Suara.vo('Waktu habis! Nyawa berkurang satu.');
+      lanjutSoal2();
+    }
+    function lanjutSoal2() {
+      setTimeout(() => {
+        if (g2.nyawa <= 0) { gagal('LEVEL 2 GAGAL', 'Nyawa habis. Ingat prosedur evakuasi gempa: berlindung, gunakan tangga darurat, lalu titik kumpul.', 's32'); return; }
+        if (g2.i < SOAL2.length - 1) { g2.i++; siapkanSoal2(); }
+        else selesaiL2();
+      }, 1400);
+    }
+    document.querySelectorAll('#s32 .opsi2').forEach(b => {
+      b.addEventListener('click', e => {
+        if (b.disabled) return;
+        hentikanL2();
+        const s = SOAL2[g2.i], i = +b.dataset.opsi, benar = i === s.b;
+        document.querySelectorAll('#s32 .opsi2').forEach(x => x.disabled = true);
+        b.classList.add(benar ? 'pilih-benar' : 'pilih-salah');
+        benar ? Suara.sfx.benar() : (Suara.sfx.salah(), g2.nyawa--);
+        gambarL2();
+        toast('s32', e, `<b>${benar ? '✅ TEPAT' : '❌ KURANG TEPAT'}</b>${s.f}`, !benar);
+        Suara.vo(s.f);
+        if (benar) g2.benar++;
+        lanjutSoal2();
+      });
+    });
+    function selesaiL2() {
+      const skor = Math.round(35 * (g2.benar / SOAL2.length));
+      progres.level.l2 = { skor, benar: g2.benar }; simpan(); Suara.sfx.menang();
+      popupInfo('✅ LEVEL 2 SELESAI', `Jawaban tepat <b>${g2.benar} dari ${SOAL2.length}</b> situasi darurat. Skor level: <b>${skor} poin</b>.`,
+        [{ t: 'MENU LEVEL', k: 'abu', f: () => ke('s3') }, { t: 'LANJUT KE LEVEL 3 →', k: 'hijau', f: () => ke('s33') }]);
+    }
+    function gambarSoal2() { } // placeholder tidak dipakai — pertanyaan sudah tergambar di mockup
+
+    /* ---------- LEVEL 3 : DRAG & DROP GROOMING ---------- */
+    const ITEM = { id: { zona: 'id' }, kemeja: { zona: 'kemeja' }, sepatu: { zona: 'sepatu' }, sandal: { zona: null } };
+    let g3 = { pilih: null, terpasang: {}, sisa: 60, timer: null };
+    function hentikanL3() { if (g3.timer) { clearInterval(g3.timer); g3.timer = null; } }
+    function gambarL3() { const w = document.getElementById('l3Waktu'); if (w) w.textContent = Math.max(0, g3.sisa) + 's'; }
+    function mulaiL3() {
+      hentikanL3();
+      g3 = { pilih: null, terpasang: {}, sisa: 60, timer: null };
+      document.querySelectorAll('#s33 [data-item]').forEach(el => el.classList.remove('terpakai'));
+      document.querySelectorAll('#s33 .dzstat').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('#s33 .itemdot').forEach(el => el.classList.remove('on'));
+      document.getElementById('btnCekHasil').disabled = true;
+      gambarL3();
+      g3.timer = setInterval(() => {
+        g3.sisa--; gambarL3();
+        if (g3.sisa <= 10 && g3.sisa > 0) Suara.sfx.tick();
+        if (g3.sisa <= 0) { hentikanL3(); gagal('LEVEL 3 GAGAL', 'Waktu habis sebelum seluruh atribut grooming terpasang.', 's33'); }
+      }, 1000);
+    }
+    document.querySelectorAll('#s33 [data-item]').forEach(el => {
+      el.onclick = () => { if (el.classList.contains('terpakai')) return; Suara.sfx.klik(); g3.pilih = el.dataset.item; };
+    });
+    document.querySelectorAll('#s33 .dz').forEach(z => {
+      z.onclick = () => {
+        if (!g3.pilih) { Suara.sfx.kunci(); return; }
+        const it = ITEM[g3.pilih], zonaId = z.dataset.zona;
+        if (it.zona !== zonaId) {
+          Suara.sfx.salah();
+          z.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], { duration: 300 });
+          Suara.vo('Item ini tidak sesuai standar grooming pemandu wisata. Ditolak otomatis.');
+          g3.pilih = null; return;
+        }
+        Suara.sfx.benar();
+        document.getElementById('item' + g3.pilih.charAt(0).toUpperCase() + g3.pilih.slice(1)).classList.add('terpakai');
+        document.getElementById('dzstat-' + zonaId).style.display = 'block';
+        g3.terpasang[zonaId] = true;
+        const n = Object.keys(g3.terpasang).length;
+        document.getElementById('dot' + (n - 1)).classList.add('on');
+        g3.pilih = null;
+        if (n === 3) { hentikanL3(); document.getElementById('btnCekHasil').disabled = false; Suara.sfx.menang(); }
+      };
+    });
+    document.getElementById('btnCekHasil').onclick = () => {
+      if (document.getElementById('btnCekHasil').disabled) return;
+      Suara.sfx.menang();
+      progres.level.l3 = { skor: 35 }; simpan();
+      popupInfo('✅ LEVEL 3 SELESAI — LULUS', 'Seluruh atribut grooming terpasang sesuai <b>Tour Guide Grooming Standard</b>: lencana/ID card, kemeja seragam berlogo, dan sepatu lapangan tertutup.',
+        [{ t: '🏅 TERBITKAN SERTIFIKAT →', k: 'hijau', f: () => ke('s34') }]);
+    };
+
+    function gagal(judul, pesan, ulang) {
+      Suara.sfx.salah();
+      popupInfo('❌ ' + judul, pesan, [{ t: 'MENU LEVEL', k: 'abu', f: () => ke('s3') }, { t: '🔁 ULANGI LEVEL', k: 'oranye', f: () => ke(ulang) }]);
+    }
+
+    /* ---------- SERTIFIKASI ---------- */
+    function skorTotal() { return ['l1', 'l2', 'l3'].reduce((a, k) => a + ((progres.level[k] && progres.level[k].skor) || 0), 0); }
+    function gambarSertifikat() {
+      const total = Math.min(100, skorTotal() + (progres.insp >= 3 ? 5 : 0) + (Object.keys(progres.baca || {}).length >= 5 ? 5 : 0));
+      document.getElementById('sertifSkor').innerHTML = 'TOTAL SKOR: ' + total + '<span style="font-size:.45em;color:#cfe6ff"> / 100</span>';
+      const b = total >= 90 ? 5 : total >= 75 ? 4 : total >= 60 ? 3 : 2;
+      document.getElementById('sertifBintang').textContent = '★'.repeat(b) + '☆'.repeat(5 - b);
+      document.getElementById('sertifStatus').textContent = 'STATUS: ' + (total >= 75 ? 'KOMPETEN PROFESIONAL ULP' : 'PERLU PENGUATAN KOMPETENSI');
+      Suara.sfx.menang();
+    }
+    document.getElementById('btnUnduh').onclick = () => {
+      Suara.sfx.klik();
+      const c = document.createElement('canvas'); c.width = 1200; c.height = 850;
+      const x = c.getContext('2d');
+      x.fillStyle = '#fffdf5'; x.fillRect(0, 0, 1200, 850);
+      x.strokeStyle = '#c9a227'; x.lineWidth = 12; x.strokeRect(28, 28, 1144, 794);
+      x.lineWidth = 3; x.strokeRect(52, 52, 1096, 746);
+      x.textAlign = 'center'; x.fillStyle = '#8a6a12';
+      x.font = 'bold 46px Georgia,serif'; x.fillText('SERTIFIKAT KOMPETENSI', 600, 180);
+      x.fillStyle = '#3a2f16'; x.font = '22px Georgia,serif'; x.fillText('diberikan kepada', 600, 240);
+      x.fillStyle = '#8a6a12'; x.font = 'bold 52px Georgia,serif'; x.fillText('TourGuide_Andi', 600, 310);
+      x.strokeStyle = '#c9a227'; x.lineWidth = 3; x.beginPath(); x.moveTo(340, 330); x.lineTo(860, 330); x.stroke();
+      x.fillStyle = '#3a2f16'; x.font = '24px Georgia,serif';
+      x.fillText('sebagai PERSONEL USAHA LAYANAN PARIWISATA', 600, 390);
+      x.fillText('SADAR PROSEDUR K3 & PELAYANAN PRIMA', 600, 428);
+      x.font = '19px Georgia,serif';
+      x.fillText('Modul IV — Prosedur Kesehatan, Keselamatan, Keamanan & Standar Grooming', 600, 486);
+      x.font = 'bold 40px Georgia,serif'; x.fillStyle = '#1f8f57';
+      x.fillText(document.getElementById('sertifSkor').textContent.trim(), 600, 566);
+      x.fillStyle = '#c9a227'; x.font = '40px Georgia,serif';
+      x.fillText(document.getElementById('sertifBintang').textContent, 600, 626);
+      x.fillStyle = '#3a2f16'; x.font = '18px Georgia,serif';
+      x.fillText(document.getElementById('sertifStatus').textContent, 600, 668);
+      x.fillText(new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }), 600, 720);
+      x.fillText('Disahkan oleh Pembina Kompetensi ULP', 600, 760);
+      const a = document.createElement('a'); a.download = 'Sertifikat-Kompetensi-ULP.png'; a.href = c.toDataURL('image/png'); a.click();
+    };
+
+    /* ---------- EVENT GLOBAL ---------- */
+    document.addEventListener('click', e => {
+      const g = e.target.closest('[data-go]');
+      if (g) { Suara.sfx.klik(); ke(g.dataset.go, 'geser'); return; }
+      const f = e.target.closest('[data-flip]');
+      if (f) { Suara.sfx.klik(); bukaFlip(f.dataset.flip); return; }
+      const m = e.target.closest('[data-modal]');
+      if (m) { Suara.sfx.klik(); bukaTirai(m.dataset.modal); return; }
+      if (e.target.closest('[data-tutup]')) { Suara.sfx.tutup(); Suara.redam(false); e.target.closest('.tirai').classList.remove('tampil'); return; }
+      const lv = e.target.closest('[data-level]');
+      if (lv) {
+        const i = +lv.dataset.level;
+        if (!terbuka(i)) {
+          Suara.sfx.kunci();
+          lv.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-8px)' }, { transform: 'translateX(8px)' }, { transform: 'translateX(0)' }], { duration: 300 });
+          Suara.vo('Level ini masih terkunci. Selesaikan tantangan sebelumnya terlebih dahulu.'); return;
+        }
+        Suara.sfx.klik(); ke(LEVEL[i].ke);
+      }
+    });
+    document.addEventListener('mouseenter', e => {
+      if (e.target.classList && e.target.classList.contains('hot')) Suara.sfx.hover();
+    }, true);
+
+    /* pengaturan */
+    let simpanSementara = { bgm: 80, sfx: 60, vo: true };
+    function terapkanBgm(v) {
+      Suara.setBgm(v / 100);
+      document.getElementById('pinBgm').style.left = (47 + v * .38 - 2.25) + '%';
+      document.getElementById('fillBgm').style.width = (v * .38) + '%';
+      document.getElementById('txtBgm').textContent = v + '%';
+    }
+    function terapkanSfx(v) {
+      Suara.setSfx(v / 100);
+      document.getElementById('pinSfx').style.left = (47 + v * .38 - 2.25) + '%';
+      document.getElementById('fillSfx').style.width = (v * .38) + '%';
+      document.getElementById('txtSfx').textContent = v + '%';
+    }
+    document.getElementById('rngBgm').oninput = function () { terapkanBgm(+this.value); };
+    document.getElementById('rngSfx').oninput = function () { terapkanSfx(+this.value); };
+    terapkanBgm(80); terapkanSfx(60);
+    document.getElementById('swVo').onclick = function () {
+      simpanSementara.vo = !simpanSementara.vo; Suara.setVo(simpanSementara.vo); Suara.sfx.klik();
+    };
+    document.getElementById('btnSimpan').onclick = () => {
+      simpanSementara = { bgm: +document.getElementById('rngBgm').value, sfx: +document.getElementById('rngSfx').value, vo: simpanSementara.vo };
+      Suara.sfx.benar(); Suara.redam(false); document.getElementById('mSet').classList.remove('tampil');
+    };
+    document.getElementById('btnKeluarYa').onclick = () => {
+      simpan(); Suara.sfx.tutup(); Suara.setAktif(false);
+      document.getElementById('mExit').classList.remove('tampil');
+      document.body.innerHTML = '<div style="position:absolute;inset:0;display:grid;place-items:center;background:#03101d;color:#fff;' +
+        'font-family:Segoe UI,system-ui,sans-serif;text-align:center;padding:24px"><div><div style="font-size:64px">👋</div>' +
+        '<h2 style="margin:12px 0">Terima kasih atas dedikasimu hari ini!</h2>' +
+        '<p style="opacity:.8">Sampai jumpa di modul berikutnya. Muat ulang halaman untuk memulai kembali.</p></div></div>';
+      try { window.close(); } catch (e) { }
+    };
+
+    /* ---------- INIT ---------- */
+    function audioSekaliKlik() {
+      Suara.init(); Suara.bgm();
+      removeEventListener('pointerdown', audioSekaliKlik); setTimeout(() => Suara.vo(VO.s0), 250);
+    }
+    addEventListener('pointerdown', audioSekaliKlik);
+  </script>
+</body>
+
+</html>
